@@ -6,11 +6,17 @@ using System.IO;
 using System;
 using System.Text;
 using Boomlagoon.JSON;
-
+using UnityEngine.UI;
 
 
 public class MainController : MonoBehaviour
 {
+
+
+
+    public InputField inputField;
+
+    public GameObject holder;
 
     // download url
     string downloadUrl = "https://us-central1-expressions-booth-guestx.cloudfunctions.net/getPhotos?lastRecordId=";
@@ -25,18 +31,28 @@ public class MainController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        //PlayerPrefs.DeleteAll();
         //check have we latestId or not, if not set 0
+        holder.SetActive(false);
         if (PlayerPrefs.HasKey("lastId"))
         {
             lastId = PlayerPrefs.GetInt("lastId");
+            InvokeRepeating("CheckNewPhotos", 0.0f, 60.0f);
         }
         else
         {
-            lastId = 0;
-            PlayerPrefs.SetInt("lastId", 0);
+            holder.SetActive(true);
         }
 
         //check new Photo Data every 60 seconds
+
+    }
+
+    public void tapSaveButton () {
+        string lastIdString = inputField.text;
+        lastId = Int32.Parse(lastIdString);
+        PlayerPrefs.SetInt("lastId", lastId);
+        holder.SetActive(false);
         InvokeRepeating("CheckNewPhotos", 0.0f, 60.0f);
     }
 
@@ -155,7 +171,7 @@ public class MainController : MonoBehaviour
         //create name for file "ticketBarcode_currentTime.jpg", add to path
         DateTime now = DateTime.Now;
         var fileName = ticketBarcode.ToString() + "_" + now.Ticks.ToString();
-        FileStream file = File.Open(Application.streamingAssetsPath + "/" + fileName + ".jpg", FileMode.Create);
+        FileStream file = File.Open(Application.streamingAssetsPath + "/guestx-images/" + fileName + ".jpg", FileMode.Create);
 
         //save data in file
         BinaryWriter bw = new BinaryWriter(file);

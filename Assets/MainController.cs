@@ -161,10 +161,10 @@ public class MainController : MonoBehaviour
         BinaryWriter bw = new BinaryWriter(file);
         bw.Write(bytes);
         file.Close();
-        StartCoroutine(UploadVideo());
+        StartCoroutine(UploadVideo(ticketBarcode));
     }
 
-    IEnumerator UploadVideo()
+    IEnumerator UploadVideo(string ticketBarcode)
     {
         var dataAPI = "[{" +
     "\"name\": \"\"," +
@@ -176,7 +176,7 @@ public class MainController : MonoBehaviour
             "\"deviceToken\": \"\"," +
             "\"type\": 10102," +
     "\"visibility\": 10301," +
-    "\"ticketBarcodes\": [\"123456789\"]," +
+            "\"ticketBarcodes\": [\"" +  ticketBarcode + "\"]," +
     "\"guestId\": \"\"," +
     "\"data\": {}" +
     "}]";
